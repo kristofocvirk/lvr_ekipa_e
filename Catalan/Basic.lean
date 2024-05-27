@@ -78,7 +78,6 @@ def is_valid_seq : ballot_seq n → Prop
 /-big task 1-/
 def fin_pi_fin_equiv  {m : ℕ} {n : Fin m → ℕ} : ((i : Fin m) → Fin (n i)) ≃ Fin (Finset.univ.prod fun (i : Fin m) => n i) :=
 sorry
-k
 /-big task 2-/
 
 /-big task 3-/
