@@ -40,16 +40,25 @@ def plane_tree.rec' (P : plane_tree → Prop)
                 match t with
                 | .node [] => leaf_case
                 | .node trs => node_case trs (λ x _ => plane_tree.rec' P leaf_case node_case x)
+
 /-small task 3-/
 inductive full_binary_tree : Type
 | leaf
 | join : (T1 T2 : full_binary_tree) → full_binary_tree
+
+def full_binary_tree.size :
+full_binary_tree → ℕ
+| leaf => 0
+| join T1 T2 => 1 + T1.size + T2.size
 
 /-small task 4-/
 inductive full_binary_tree_with_nodes : ℕ → Type
 | leaf : full_binary_tree_with_nodes 0
 | join : {n m : ℕ} → full_binary_tree_with_nodes n → full_binary_tree_with_nodes m →
           full_binary_tree_with_nodes (n + m + 1)
+
+def full_binary_tree_with_nodes.size (_ : full_binary_tree_with_nodes n) : ℕ :=
+  n
 
 /-small task 5-/
 
@@ -69,21 +78,22 @@ def dist_fin_sigma {k : Nat} {n : Fin k → Nat} :
 
 /-big task 3-/
 
-def full_binary_tree_with_nodes.size (_ : full_binary_tree_with_nodes n) : ℕ :=
-  n
-
-def full_binary_tree_to_nat_num : full_binary_tree_with_nodes n → ℕ
+def serialize : full_binary_tree_with_nodes n → ℕ
   | .leaf => 0
   | .join T1 T2 =>
-    match (full_binary_tree_to_nat_num T1), (full_binary_tree_to_nat_num T2) with
-    | left_idx, right_idx => right_idx + (catalan T2.size) * left_idx + ∑ i < T2.size, (catalan i) * (T1.size + T2.size - i)
+    match (serialize T1), (serialize T2) with
+    | left_idx, right_idx =>
+      right_idx + (catalan T2.size) * left_idx + ∑ i < T2.size, (catalan i) * (T1.size + T2.size - i)
 
-def nat_num_to_full_binary_tree : (n : ℕ) → ℕ → full_binary_tree_with_nodes n
-  | 0, _ => .leaf
-  | num_nodes, idx => sorry
+#check Set.InjOn
 
+theorem inj_serialize {n : ℕ} : Set.InjOn serialize { t } := by
+  sorry
 
-def bijectionFullBinTreeCatalan : full_binary_tree_with_nodes n ≃ Fin (catalan (n)) :=
+theorem surj_serialize {n : ℕ} : Set.SurjOn serialize { t } {i | i < catalan n} := by
+  sorry
+
+def bijectionFullBinTreeCatalan : serialize  :=
   sorry
 
 /-big task 4-/
@@ -165,7 +175,6 @@ right_inv := by
     simp [plane_tree_of_binary_leaf]
   . intros ts h
     unfold
-
 
 /-big task 6 -/
 
