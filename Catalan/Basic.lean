@@ -21,7 +21,9 @@ def catalan : ℕ → ℕ
   | n + 1 =>
     ∑ i : Fin n.succ,
       catalan i * catalan (n - i)
-#align catalan catalan
+
+theorem catalan_succ (n : ℕ) : catalan (n + 1) = ∑ i : Fin n.succ, catalan i * catalan (n - i) := by
+  rw [catalan]
 
 /-small task 2-/
 inductive plane_tree : Type
@@ -33,13 +35,13 @@ inductive plane_tree : Type
 #check Nat.rec
 #check plane_tree.rec
 
-def plane_tree.rec' (P : plane_tree → Prop)
+def plane_tree.rec' (P : plane_tree → Sort u) (t : plane_tree)
                   (leaf_case : P (plane_tree.node []))
-                  (node_case : ∀ (ts : List plane_tree), (∀ t, t ∈ ts → P t) → P (plane_tree.node ts))
-                  (t : plane_tree) : P t :=
+                  (node_case : (ts : List plane_tree) → (∀ t, t ∈ ts → P t) → P (plane_tree.node ts))
+                   : P t :=
                 match t with
                 | .node [] => leaf_case
-                | .node trs => node_case trs (λ x _ => plane_tree.rec' P leaf_case node_case x)
+                | .node trs => node_case trs (λ x _ => plane_tree.rec' P x leaf_case node_case)
 
 /-small task 3-/
 inductive full_binary_tree : Type
@@ -67,34 +69,6 @@ def ballot_seqs_n (n : ℕ) : Set (List ℤ) :=
 
 def ballot_seqs_2n (n : ℕ) : Set (List ℤ) :=
   {l | l.count 1 = n ∧ l.count (-1) = n ∧ ∀ x ∈ l, x = (1 : ℤ) ∨ x = -1 ∧ ∀ i ≤ n, List.sum (List.take i l) ≥ 0}
-
-/-big task 1-/
-
-def dist_fin_sigma {k : Nat} {n : Fin k → Nat} :
-  (i : Fin k) × Fin (n i) ≃ Fin (∑ i : Fin k, n i) := by
-  induction k with
-  | zero => sorry
-  | succ k H => sorry
-
-/-big task 3-/
-
-def serialize : full_binary_tree_with_nodes n → ℕ
-  | .leaf => 0
-  | .join T1 T2 =>
-    match (serialize T1), (serialize T2) with
-    | left_idx, right_idx =>
-      right_idx + (catalan T2.size) * left_idx + ∑ i < T2.size, (catalan i) * (T1.size + T2.size - i)
-
-#check Set.InjOn
-
-theorem inj_serialize {n : ℕ} : Set.InjOn serialize { t } := by
-  sorry
-
-theorem surj_serialize {n : ℕ} : Set.SurjOn serialize { t } {i | i < catalan n} := by
-  sorry
-
-def bijectionFullBinTreeCatalan : serialize  :=
-  sorry
 
 /-big task 4-/
 def list_plane_tree_to_plane_tree :
@@ -156,6 +130,11 @@ theorem full_binary_tree_of_node :
   dsimp [full_binary_tree_of_plane_tree]
   rw [WellFounded.fix_eq]
 
+theorem cons_subset {t : α} {P : α → Prop} (h : ∀ t ∈ hd :: tl, P t) : ∀ t ∈ tl, P t := by
+  intros t ht
+  apply h
+  exact List.mem_cons_of_mem hd ht
+
 def rotating_isomorphism : full_binary_tree ≃ plane_tree where
 toFun := plane_tree_of_full_binary_tree
 invFun := full_binary_tree_of_plane_tree
@@ -173,18 +152,46 @@ right_inv := by
   apply T.rec'
   . simp [full_binary_tree_of_leaf]
     simp [plane_tree_of_binary_leaf]
-  . intros ts h
-    unfold
+  . intro ts h
+    induction' ts with hd tl htl
+    . rfl
+    . simp [full_binary_tree_of_node]
+      simp [plane_tree_of_full_binary_tree]
+      rw [htl, h]
+      . exact List.mem_cons_self hd tl
+      . apply cons_subset h
+        exact T
 
-/-big task 6 -/
+/-big task 6-/
+#check Nat.gcd_mul_left
 
-theorem divisor_of_choose_2n_plus_one (n : ℕ) : (Nat.choose (2*n) (n+1)) = n / (n+1) * (Nat.choose (2*n) n) := by
-  sorry
+theorem succ_mul_choose_succ (n : ℕ) :
+    (n + 1) * (2*(n + 1)).choose (n+1) = 2 * (2 * n + 1) * (2*n).choose n :=
+  calc
+    (n + 1) * (2 * (n + 1)).choose (n + 1) = (2 * n + 2).choose (n + 1) * (n + 1) := mul_comm _ _
+    _ = (2 * n + 1).choose n * (2 * n + 2) := by rw [Nat.choose_succ_right_eq, Nat.choose_mul_succ_eq]
+    _ = 2 * ((2 * n + 1).choose n * (n + 1)) := by ring
+    _ = 2 * ((2 * n + 1).choose n * (2 * n + 1 - n)) := by rw [two_mul n, add_assoc,
+                                                               Nat.add_sub_cancel_left]
+    _ = 2 * ((2 * n).choose n * (2 * n + 1)) := by rw [Nat.choose_mul_succ_eq]
+    _ = 2 * (2 * n + 1) * (2 * n).choose n := by rw [mul_assoc, mul_comm (2 * n + 1)]
 
-/-big task 7-/
-theorem catalan_n_eq_2n_choose_n (n : ℕ) : catalan n = (Nat.choose (2*n) n) / (n+1) := by
-sorry
+theorem two_dvd_choose_succ (n : ℕ) : 2 ∣ (2*(n + 1)).choose (n+1) := by
+  use (n + 1 + n).choose n
+  rw [two_mul, ← add_assoc, Nat.choose_succ_succ' (n + 1 + n) n, Nat.choose_symm_add, ← two_mul]
 
-/-big task 8-/
-def isoValidBallotSeqCatalan (n : ℕ) : ballot_seqs_2n n ≃ Fin (catalan (n+1)) :=
-sorry
+theorem succ_dvd_centralBinom (n : ℕ) : n + 1 ∣ (2*n).choose n:= by
+  have h_s : (n + 1).Coprime (2 * n + 1) := by
+    rw [two_mul, add_assoc, Nat.coprime_add_self_right, Nat.coprime_self_add_left]
+    exact Nat.gcd_one_left n
+  apply h_s.dvd_of_dvd_mul_left
+  apply Nat.dvd_of_mul_dvd_mul_left zero_lt_two
+  rw [← mul_assoc, ← succ_mul_choose_succ , mul_comm]
+  apply mul_dvd_mul_left
+  rw [mul_comm]
+  exact two_dvd_choose_succ n
+
+#check Nat.dvd_div_of_mul_dvd
+theorem succ_dvd_centralBinom_cheeky (n : ℕ) : n + 1 ∣ (2*n).choose n := by
+  rw [← Nat.centralBinom_eq_two_mul_choose]
+  exact Nat.succ_dvd_centralBinom n
