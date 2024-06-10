@@ -15,4 +15,4 @@ and three large tasks
 
 5. Construct the rotating isomorphism, which is the isomorphism between plane trees and full binary trees. [(solution)](Catalan/RotatingIsomorphism.lean)
 
-6. Show that `(2*n).Choose n` in divisible by `2*n`. [(solution)](Catalan/Catalan.lean) 
+6. Show that `(2*n).Choose n` in divisible by `n + 1`. [(solution)](Catalan/Catalan.lean) 
