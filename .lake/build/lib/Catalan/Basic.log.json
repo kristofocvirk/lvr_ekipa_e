@@ -1,3 +1,18 @@
 [{"message":
-  ".> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH=././.lake/build/lib /home/kristof/.elan/toolchains/leanprover--lean4---v4.8.0-rc1/bin/lean -Dpp.unicode.fun=true -Dpp.proofs.withType=false ././././Catalan/Basic.lean -R ./././. -o ././.lake/build/lib/Catalan/Basic.olean -i ././.lake/build/lib/Catalan/Basic.ilean -c ././.lake/build/ir/Catalan/Basic.c --json",
-  "level": "trace"}]
+  ".> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/build/lib:/home/kristof/.elan/toolchains/leanprover--lean4---v4.8.0-rc1/lib/lean:/home/kristof/.elan/toolchains/leanprover--lean4---v4.8.0-rc1/lib:././.lake/build/lib /home/kristof/.elan/toolchains/leanprover--lean4---v4.8.0-rc1/bin/lean -Dpp.unicode.fun=true -Dpp.proofs.withType=false ././././Catalan/Basic.lean -R ./././. -o ././.lake/build/lib/Catalan/Basic.olean -i ././.lake/build/lib/Catalan/Basic.ilean -c ././.lake/build/ir/Catalan/Basic.c --json",
+  "level": "trace"},
+ {"message":
+  "././././Catalan/Basic.lean:35:0-35:6: Nat.rec.{u} {motive : ℕ → Sort u} (zero : motive Nat.zero) (succ : (n : ℕ) → motive n → motive n.succ) (t : ℕ) :\n  motive t",
+  "level": "info"},
+ {"message":
+  "././././Catalan/Basic.lean:36:0-36:6: plane_tree.rec.{u} {motive_1 : plane_tree → Sort u} {motive_2 : List plane_tree → Sort u}\n  (node : (a : List plane_tree) → motive_2 a → motive_1 (plane_tree.node a)) (nil : motive_2 [])\n  (cons : (head : plane_tree) → (tail : List plane_tree) → motive_1 head → motive_2 tail → motive_2 (head :: tail))\n  (t : plane_tree) : motive_1 t",
+  "level": "info"},
+ {"message":
+  "././././Catalan/Basic.lean:127:21-127:22: unused variable `t`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`",
+  "level": "warning"},
+ {"message":
+  "././././Catalan/Basic.lean:160:0-160:6: Nat.gcd_mul_left (m n k : ℕ) : (m * n).gcd (m * k) = m * n.gcd k",
+  "level": "info"},
+ {"message":
+  "././././Catalan/Basic.lean:188:0-188:6: Nat.dvd_div_of_mul_dvd {a b c : ℕ} (h : a * b ∣ c) : b ∣ c / a",
+  "level": "info"}]
