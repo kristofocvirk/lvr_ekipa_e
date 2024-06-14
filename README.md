@@ -14,5 +14,3 @@ and three large tasks
 4. Construct a bijection between lists of plane trees and plane trees. [(solution)](Catalan/PlaneTrees.lean)
 
 5. Construct the rotating isomorphism, which is the isomorphism between plane trees and full binary trees. [(solution)](Catalan/RotatingIsomorphism.lean)
-
-6. Show that `(2*n).Choose n` in divisible by `n + 1`. [(solution)](Catalan/Catalan.lean) 
