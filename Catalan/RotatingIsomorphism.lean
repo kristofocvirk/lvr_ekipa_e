@@ -56,7 +56,7 @@ left_inv := by
   induction' T with T1 T2 H1 H2
   . simp [plane_tree_of_binary_leaf]
     simp [full_binary_tree_of_leaf]
-  . dsimp [plane_tree_of_binary_node]
+  . simp [plane_tree_of_binary_node]
     cases' tr : plane_tree_of_full_binary_tree T2
     simp
     rw [full_binary_tree_of_node, ← tr, H1, H2]
